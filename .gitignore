@@ -1,0 +1,7 @@
+.env
+.project
+DODO
+gh.egg-info
+gh/
+venv*
+__pycache__
