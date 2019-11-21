@@ -36,3 +36,13 @@ def test_projects_alpha(tmpdir):
     assert result == exp
 
 
+# -----------------------------------------------------------------------------
+def test_omit_list():
+    """
+    Check that ghm.omit_list() returns a set of strings
+    """
+    result = ghm.omit_list()                                          # payload
+    for item in result:
+        assert type(item) == str
+
+
