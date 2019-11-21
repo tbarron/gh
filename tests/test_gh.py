@@ -47,6 +47,29 @@ def test_omit_list():
 
 
 # -----------------------------------------------------------------------------
+def test_dodo_filename_x(dodo_existing):
+    """
+    Run dodo_filename for a file that exists
+    """
+    pytest.dbgfunc()
+    (prjdir, dofile) = dodo_existing
+    rval = ghm.dodo_filename(prjdir.strpath)                          # payload
+    assert rval == dofile.strpath
+
+
+# -----------------------------------------------------------------------------
+def test_dodo_filename_n(dodo_nosuch):
+    """
+    Run dodo_filename for a file that does not exist
+    """
+    pytest.dbgfunc()
+    (prjdir, dofile) = dodo_nosuch
+    rval = ghm.dodo_filename(prjdir.strpath)                          # payload
+    assert not dofile.exists()
+    assert rval is None
+
+
+# -----------------------------------------------------------------------------
 @pytest.fixture
 def dodo_existing(tmpdir):
     """
