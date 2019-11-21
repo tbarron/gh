@@ -143,12 +143,20 @@ def projects(root, verbose, sort=None):
         if '.project' in files:
             rval.append(path)
     if sort == 'alpha':
-        rval = sorted(rval)
+        rval = alpha_sort(rval)
     elif sort == 'old':
         rval = old_sort(rval)
     elif sort == 'new':
         rval = new_sort(rval)
     return rval
+
+
+# -----------------------------------------------------------------------------
+def alpha_sort(projs):
+    """
+    Sort project paths alphabetically
+    """
+    return sorted(projs)
 
 
 # -----------------------------------------------------------------------------
