@@ -32,9 +32,12 @@ def gh_projects(**kw):
     """
     if kw['d']:
         pdb.set_trace()
-    for item in files:
-        print("    {}".format(item))
     files = projects(os.getenv("GH_ROOT"), kw['s'])
+    if kw['count']:
+        print("{} projects found".format(len(files)))
+    else:
+        for item in files:
+            print("    {}".format(item))
 
 
 # -----------------------------------------------------------------------------
@@ -51,6 +54,13 @@ def gh_tasks(**kw):
     if kw['PROJECT']:
         files = [_ for _ in files if kw['PROJECT'] in _]
 
+    total = 0
+    if kw['count']:
+        for path in files:
+            tl = get_tasks(path)
+            print("   {:45s}   {:>5d}".format(path, len(tl)))
+            total += len(tl)
+        print("   {:45s}   {:>5d}".format("Total", total))
     else:
         for path in files:
             show_tasks(path)
