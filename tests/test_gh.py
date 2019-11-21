@@ -71,6 +71,46 @@ def test_dodo_filename_n(dodo_nosuch):
 
 
 # -----------------------------------------------------------------------------
+def test_alpha_sort(prjdirs):
+    """
+    A set of projects sorted alphabetically
+    """
+    pytest.dbgfunc()
+    result = ghm.alpha_sort(prjdirs['input'])                         # payload
+    assert result == prjdirs['asort']
+
+
+# -----------------------------------------------------------------------------
+def test_new_sort(prjdirs):
+    """
+    A set of projects sorted new to old DODO file (no DODO file is oldest)
+    """
+    pytest.dbgfunc()
+    result = ghm.new_sort(prjdirs['input'])                           # payload
+    assert result == prjdirs['nsort']
+
+
+# -----------------------------------------------------------------------------
+def test_no_sort(prjdirs):
+    """
+    What we get if we don't sort a list of projects
+    """
+    pytest.dbgfunc()
+    result = ghm.projects(prjdirs['root'].strpath, False)             # payload
+    assert set(result) == set([_.strpath for _ in prjdirs['input']])
+
+
+# -----------------------------------------------------------------------------
+def test_old_sort(prjdirs):
+    """
+    A set of projects sorted old to new DODO file (no DODO file is oldest)
+    """
+    pytest.dbgfunc()
+    result = ghm.old_sort(prjdirs['input'])                           # payload
+    assert result == prjdirs['osort']
+
+
+# -----------------------------------------------------------------------------
 @pytest.fixture
 def prjdirs(tmpdir):
     """
