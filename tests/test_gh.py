@@ -21,8 +21,18 @@ def test_is_throw_away(inp, exp):
 
 
 # -----------------------------------------------------------------------------
-def test_fails():
+def test_projects_alpha(tmpdir):
     """
-    Verifying that pytest works
+    Test for ghm.projects()
     """
-    pytest.fail('construction')
+    pytest.dbgfunc()
+    plist = ['one', 'two', 'three', 'four']
+    for prj in plist:
+        pdir = tmpdir.join(prj)
+        pdir.ensure(dir=True)
+        pdir.join('.project').ensure()
+    exp = ["{}/{}".format(tmpdir.strpath, _) for _ in sorted(plist)]
+    result = ghm.projects(tmpdir.strpath, False, sort='alpha')        # payload
+    assert result == exp
+
+
