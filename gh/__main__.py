@@ -32,9 +32,9 @@ def gh_projects(**kw):
     """
     if kw['d']:
         pdb.set_trace()
-    files = projects(os.getenv("GH_ROOT"), kw['v'], kw['s'])
     for item in files:
         print("    {}".format(item))
+    files = projects(os.getenv("GH_ROOT"), kw['s'])
 
 
 # -----------------------------------------------------------------------------
@@ -45,7 +45,7 @@ def gh_tasks(**kw):
     """
     if kw['d']:
         pdb.set_trace()
-    files = projects(os.getenv("GH_ROOT"), False)
+    files = projects(os.getenv("GH_ROOT"), sort=sort)
     if kw['PROJECT']:
         for path in [_ for _ in files if kw['PROJECT'] in _]:
             show_tasks(path)
@@ -130,7 +130,7 @@ def omit_list():
 
 
 # -----------------------------------------------------------------------------
-def projects(root, verbose, sort=None):
+def projects(root, sort=None):
     """
     Return a list of project directories. To represent a project, the directory
     must contain a marker file named '.project'.
