@@ -154,8 +154,8 @@ def projects(root, verbose, sort=None):
 # -----------------------------------------------------------------------------
 def old_sort(projs):
     """
-    Sort projects from oldest to newest by mtime of DODO file. Projects with no
-    DODO file are considered oldest.
+    Sort project paths from oldest to newest by mtime of DODO file. Projects
+    with no DODO file are considered oldest.
     """
     pdict = {}
     for prj in projs:
