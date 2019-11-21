@@ -101,12 +101,12 @@ def is_throw_away(line):
     """
     Return True if the line is a throw_away, otherwise False
     """
-    rval = any([line.startswith("------------"),
+    rval = any([line.startswith("--------"),
                 line.strip() == "",
                 line.startswith("#"),
-                re.search("^ *-+\s+DONE", line),
-                re.search("^-\s+=+\s+DONE", line),
-                re.search("^=+\s+DONE", line),
+                re.search(r"^ *-+\s+DONE", line),
+                re.search(r"^-\s+=+\s+DONE", line),
+                re.search(r"^=+\s+DONE", line),
                 ])
     return rval
 
