@@ -55,16 +55,16 @@ def gh_tasks(**kw):
 
 
 # -----------------------------------------------------------------------------
-def show_tasks(path):
+def get_tasks(path):
     """
-    Show the tasks in dodo file *path*
+    Get a list of the tasks in dodo file *path*
     """
     task = ""
     task_l = []
     throw_away = True
     dofile = dodo_filename(path)
     if dofile is None:
-        return
+        return []
     with open(dofile) as rbl:
         for line in rbl:
             if line.startswith(" + "):
@@ -78,6 +78,15 @@ def show_tasks(path):
         task_l.append(task)
 
     task_l = [_ for _ in task_l if _]
+    return task_l
+
+
+# -----------------------------------------------------------------------------
+def show_tasks(path):
+    """
+    Show the tasks in dodo file *path*
+    """
+    task_l = get_tasks(path)
     if task_l:
         print("----------- {} ------------\n".format(path))
         for task in task_l:
