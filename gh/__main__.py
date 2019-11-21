@@ -1,7 +1,7 @@
 """
 Usage:
-    gh projects [-d] [-v] [-s SORT]
-    gh tasks [-d] [PROJECT]
+    gh projects [-d] [-s SORT] [--count]
+    gh tasks [-d] [-s SORT] [--count] [PROJECT]
 
 Options:
     -s SORT       determine project order ('alpha', 'old', or 'new')
@@ -45,6 +45,8 @@ def gh_tasks(**kw):
     """
     if kw['d']:
         pdb.set_trace()
+
+    sort = kw['s']
     files = projects(os.getenv("GH_ROOT"), sort=sort)
     if kw['PROJECT']:
         for path in [_ for _ in files if kw['PROJECT'] in _]:
