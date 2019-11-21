@@ -49,8 +49,8 @@ def gh_tasks(**kw):
     sort = kw['s']
     files = projects(os.getenv("GH_ROOT"), sort=sort)
     if kw['PROJECT']:
-        for path in [_ for _ in files if kw['PROJECT'] in _]:
-            show_tasks(path)
+        files = [_ for _ in files if kw['PROJECT'] in _]
+
     else:
         for path in files:
             show_tasks(path)
