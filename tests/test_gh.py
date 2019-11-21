@@ -46,3 +46,28 @@ def test_omit_list():
         assert type(item) == str
 
 
+# -----------------------------------------------------------------------------
+@pytest.fixture
+def dodo_existing(tmpdir):
+    """
+    Set up a project with a DODO file
+    """
+    prjdir = tmpdir.join('projdir')
+    prjdir.ensure(dir=True)
+    prjdir.join('.project').ensure()
+    dofile = prjdir.join('DODO')
+    dofile.write("\n - this is a task\n")
+    return (prjdir, dofile)
+
+
+# -----------------------------------------------------------------------------
+@pytest.fixture
+def dodo_nosuch(tmpdir):
+    """
+    Set up a project without a DODO file
+    """
+    prjdir = tmpdir.join('projdir')
+    prjdir.ensure(dir=True)
+    prjdir.join('.project').ensure()
+    dofile = prjdir.join('DODO')
+    return (prjdir, dofile)
