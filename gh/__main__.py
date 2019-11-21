@@ -112,15 +112,6 @@ def is_throw_away(line):
 
 
 # -----------------------------------------------------------------------------
-def show_one(task):
-    """
-    Display the task
-    """
-    if task:
-        print(task)
-
-
-# -----------------------------------------------------------------------------
 def omit_list():
     """
     Return a list of projects to omit from the lists
@@ -185,23 +176,6 @@ def new_sort(projs):
     """
     rval = old_sort(projs)
     return list(reversed(rval))
-
-
-# -----------------------------------------------------------------------------
-def dodo_files(root):
-    """
-    Get a list of DODO files from *root*
-    """
-    rval = []
-    omits = omit_list()
-    for (path, dirs, files) in os.walk(root):
-        if any([_ in path for _ in omits]):
-            continue
-        dodo_files = [_ for _ in files
-                      if _.startswith('DODO') and '~' not in _]
-        for item in dodo_files:
-            rval.append("{}/{}".format(path, item))
-    return rval
 
 
 # -----------------------------------------------------------------------------
