@@ -1,4 +1,5 @@
 from gh import __main__ as ghm
+import os
 import pytest
 
 
@@ -67,6 +68,45 @@ def test_dodo_filename_n(dodo_nosuch):
     rval = ghm.dodo_filename(prjdir.strpath)                          # payload
     assert not dofile.exists()
     assert rval is None
+
+
+# -----------------------------------------------------------------------------
+@pytest.fixture
+def prjdirs(tmpdir):
+    """
+    Set up some project directories for testing
+    """
+    pdata = {
+        'apple': {'dtime': 1500},
+        'zagnut': {'dtime': 1400},
+        'frump': {'dtime': 1300},
+        'gh': {'dtime': 1200},
+        'tbx': {'dtime': 1000},
+        }
+    for prj in pdata:
+        pd = tmpdir.join(prj)
+        pd.ensure(dir=True)
+        dot = pd.join('.project')
+        dot.ensure()
+        dodo = pd.join('DODO')
+        dodo.ensure()
+        os.utime(dodo.strpath, (dodo.atime(),
+                                dodo.mtime() - pdata[prj]['dtime']))
+        pdata[prj]['dir'] = pd
+        pdata[prj]['dot'] = dot
+        pdata[prj]['dodo'] = dodo
+
+    pfruit = {}
+    pfruit['raw'] = pdata
+    pfruit['root'] = tmpdir
+    pfruit['input'] = [pdata[_]['dir'] for _ in pdata]
+    pfruit['asort'] = [pdata[_]['dir']
+                       for _ in ['apple', 'frump', 'gh', 'tbx', 'zagnut',]]
+    pfruit['nsort'] = [pdata[_]['dir']
+                       for _ in ['tbx', 'gh', 'frump', 'zagnut', 'apple',]]
+    pfruit['osort'] = [pdata[_]['dir']
+                       for _ in ['apple', 'zagnut', 'frump', 'gh', 'tbx',]]
+    return pfruit
 
 
 # -----------------------------------------------------------------------------
