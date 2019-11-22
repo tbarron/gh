@@ -132,7 +132,7 @@ def prjdirs(tmpdir):
         'frump': {'dtime': 1300},
         'gh': {'dtime': 1200},
         'tbx': {'dtime': 1000},
-        }
+    }
     for prj in pdata:
         pd = tmpdir.join(prj)
         pd.ensure(dir=True)
@@ -151,11 +151,29 @@ def prjdirs(tmpdir):
     pfruit['root'] = tmpdir
     pfruit['input'] = [pdata[_]['dir'] for _ in pdata]
     pfruit['asort'] = [pdata[_]['dir']
-                       for _ in ['apple', 'frump', 'gh', 'tbx', 'zagnut',]]
+                       for _ in ['apple',
+                                 'frump',
+                                 'gh',
+                                 'nododo',
+                                 'tbx',
+                                 'zagnut',
+                                 ]]
     pfruit['nsort'] = [pdata[_]['dir']
-                       for _ in ['tbx', 'gh', 'frump', 'zagnut', 'apple',]]
+                       for _ in ['tbx',
+                                 'gh',
+                                 'frump',
+                                 'zagnut',
+                                 'apple',
+                                 'nododo',
+                                 ]]
     pfruit['osort'] = [pdata[_]['dir']
-                       for _ in ['apple', 'zagnut', 'frump', 'gh', 'tbx',]]
+                       for _ in ['nododo',
+                                 'apple',
+                                 'zagnut',
+                                 'frump',
+                                 'gh',
+                                 'tbx',
+                                 ]]
     return pfruit
 
 
