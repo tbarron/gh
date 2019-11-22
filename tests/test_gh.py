@@ -38,6 +38,17 @@ def test_task_separation(tasks, capsys):
 
 
 # -----------------------------------------------------------------------------
+def test_task_markers(tasks, capsys):
+    """
+    Use all potential task markers to identify tasks
+    """
+    pytest.dbgfunc()
+    path = tasks['prj'].strpath
+    task_l = ghm.get_tasks(path)
+    assert len(task_l) == 4
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("inp, exp", [
     pytest.param("----------", True, id="throw away: hyphen lines"),
     pytest.param("", True, id="throw away: empty lines"),
@@ -161,10 +172,11 @@ def tasks(tmpdir):
     """
     task_l = [
         "",
-        " - this is the first task",
-        " - this is the second task",
-        " - this is the third task",
-        ""
+        " ^ this is the first task (released)",
+        " > this is the second task (committed)",
+        " . this is the third task (changed, not yet committed)",
+        " - this is the fourth task (not yet made)",
+        "",
     ]
     # project dir
     prjdir = tmpdir.join("myproj")
@@ -178,6 +190,8 @@ def tasks(tmpdir):
 
     data = {
         'tmpdir': tmpdir,
+        'prj': prjdir,
+        'dodo': dodo,
     }
     return data
 
