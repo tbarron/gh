@@ -28,18 +28,30 @@ import re
 
 # -----------------------------------------------------------------------------
 @dispatch.on('projects')
-def gh_projects(**kw):
+def gh_projects_d(**kw):
     """
     List projects in $GH_ROOT
     """
     if kw['d']:
         pdb.set_trace()
+    print(gh_projects_t(**kw))
+
+
+# -----------------------------------------------------------------------------
+def gh_projects_t(**kw):
+    """
+    Heavy lifting
+    """
+    rval = ""
     files = projects(os.getenv("GH_ROOT"), kw['s'])
     if kw['count']:
-        print("{} projects found".format(len(files)))
+        # print("{} projects found".format(len(files)))
+        rval += "{} projects found\n".format(len(files))
     else:
         for item in files:
-            print("    {}".format(item))
+            # print("    {}".format(item))
+            rval += "    {}\n".format(item)
+    return rval
 
 
 # -----------------------------------------------------------------------------
