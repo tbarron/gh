@@ -229,7 +229,7 @@ def projects(root, sort=None):
         [dirs.remove(item) for item in rmables]
         if '.project' in files:
             plist.append(path)
-            if any('DODO' in _[0] for _ in files):
+            if any('DODO' in _ for _ in files):
                 dolist.append(path)
 
     if sort == 'alpha':
