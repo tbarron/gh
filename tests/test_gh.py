@@ -20,7 +20,7 @@ def test_code_quality():
 
 
 # -----------------------------------------------------------------------------
-def test_task_separation(tasks, capsys):
+def test_task_separation(tasks):
     """
     Given some tasks, report them and verify that they have whitespace between
     them
@@ -30,11 +30,8 @@ def test_task_separation(tasks, capsys):
     kw = {'PROJECT': None, 'count': False, 'd': False, 's': None,
           'projects': False, 'tasks': True, 'version': False}
     with tbx.envset(GH_ROOT=tmpdir.strpath):
-        ghm.gh_tasks_d(**kw)
-        (out, err) = capsys.readouterr()
-        assert "\n\n - " in out
-        assert "Traceback" not in err
-        assert "Traceback" not in out
+        result = ghm.gh_tasks_t(**kw)
+        assert "\n\n - " in result
 
 
 # -----------------------------------------------------------------------------
@@ -67,19 +64,18 @@ def test_is_throw_away(inp, exp):
 
 
 # -----------------------------------------------------------------------------
-def test_projects_alpha(tmpdir):
+def test_projects_t(prjdirs):
     """
-    Test for ghm.projects()
+    Test for ghm.gh_projects_t(), verifying that projects with no dodo file are
+    identified
     """
     pytest.dbgfunc()
-    plist = ['one', 'two', 'three', 'four']
-    for prj in plist:
-        pdir = tmpdir.join(prj)
-        pdir.ensure(dir=True)
-        pdir.join('.project').ensure()
-    exp = ["{}/{}".format(tmpdir.strpath, _) for _ in sorted(plist)]
-    result = ghm.projects(tmpdir.strpath, sort='alpha')               # payload
-    assert result == exp
+    tmpdir = prjdirs['root']
+    kw = {'PROJECT': None, 'count': False, 'd': False, 's': None,
+          'projects': True, 'tasks': False, 'version': False}
+    with tbx.envset(GH_ROOT=tmpdir.strpath):
+        result = ghm.gh_projects_t(**kw)
+        assert "nododo (no DODO)" in result
 
 
 # -----------------------------------------------------------------------------
@@ -141,7 +137,8 @@ def test_no_sort(prjdirs):
     What we get if we don't sort a list of projects
     """
     pytest.dbgfunc()
-    result = ghm.projects(prjdirs['root'].strpath, False)             # payload
+    tup_l = ghm.projects(prjdirs['root'].strpath, False)              # payload
+    result = [_[0] for _ in tup_l]
     assert set(result) == set([_.strpath for _ in prjdirs['input']])
 
 
