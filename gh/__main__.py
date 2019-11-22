@@ -244,4 +244,4 @@ def new_sort(projs):
 
 # -----------------------------------------------------------------------------
 if __name__ == "__main__":
-    dispatch(__doc__)
+    dispatch(__doc__)                                        # pragma: no cover
