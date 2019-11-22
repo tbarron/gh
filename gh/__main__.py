@@ -45,11 +45,9 @@ def gh_projects_t(**kw):
     rval = ""
     files = projects(os.getenv("GH_ROOT"), kw['s'])
     if kw['count']:
-        # print("{} projects found".format(len(files)))
         rval += "{} projects found\n".format(len(files))
     else:
         for item in files:
-            # print("    {}".format(item))
             rval += "    {}\n".format(item)
     return rval
 
@@ -79,10 +77,8 @@ def gh_tasks_t(**kw):
     if kw['count']:
         for path in files:
             tl = get_tasks(path)
-            # print("   {:45s}   {:>5d}".format(path, len(tl)))
             rval += "   {:45s}   {:>5d}\n".format(path, len(tl))
             total += len(tl)
-        # print("   {:45s}   {:>5d}".format("Total", total))
         rval += "   {:45s}   {:>5d}\n".format("Total", total)
     else:
         for path in files:
@@ -144,11 +140,9 @@ def show_tasks(path):
     rval = ""
     task_l = get_tasks(path)
     if task_l:
-        # print("----------- {} ------------\n".format(path))
         rval += "----------- {} ------------\n".format(path)
         for task in task_l:
-            # print(task)
-            rval += task
+            rval += task + "\n"
     return rval
 
 
