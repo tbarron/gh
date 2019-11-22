@@ -33,7 +33,7 @@ def test_projects_alpha(tmpdir):
         pdir.ensure(dir=True)
         pdir.join('.project').ensure()
     exp = ["{}/{}".format(tmpdir.strpath, _) for _ in sorted(plist)]
-    result = ghm.projects(tmpdir.strpath, False, sort='alpha')        # payload
+    result = ghm.projects(tmpdir.strpath, sort='alpha')               # payload
     assert result == exp
 
 
