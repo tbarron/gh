@@ -1,7 +1,22 @@
 from gh import __main__ as ghm
 from gh import version
+import glob
 import os
 import pytest
+import tbx
+
+
+# -----------------------------------------------------------------------------
+def test_code_quality():
+    """
+    Run flake8 to assess the quality of the package per pep8
+    """
+    pytest.dbgfunc()
+    globble = sorted(glob.glob("gh/*.py"))
+    globble.extend(sorted(glob.glob("tests/*.py")))
+    cmd = "flake8 --ignore \"$FLAKE_IGNORE\" {}".format(" ".join(globble))
+    result = tbx.run(tbx.expand(cmd))
+    assert result == ""
 
 
 # -----------------------------------------------------------------------------
