@@ -2,6 +2,7 @@
 Usage:
     gh projects [-d] [-s SORT] [--count]
     gh tasks [-d] [-s SORT] [--count] [PROJECT]
+    gh version [-d]
 
 Options:
     -s SORT       determine project order ('alpha', 'old', or 'new')
@@ -17,6 +18,7 @@ gh projects [-d] [-v] [-s SORT]
     'old' sort will put projects with no DODO file at the top of the list.
 """
 from docopt_dispatch import dispatch
+from gh import version
 import glob
 import os
 import os.path as osp
@@ -64,6 +66,23 @@ def gh_tasks(**kw):
     else:
         for path in files:
             show_tasks(path)
+# -----------------------------------------------------------------------------
+@dispatch.on('version')
+def gh_version_d(**kw):
+    """
+    Report the current version
+    """
+    if kw['d']:
+        pdb.set_trace()
+    print(gh_version_t())
+
+
+# -----------------------------------------------------------------------------
+def gh_version_t():
+    """
+    Retrieve and return the string for gh version
+    """
+    return "gh {}".format(version._v)
 
 
 # -----------------------------------------------------------------------------
