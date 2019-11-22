@@ -151,7 +151,7 @@ def dodo_filename(path):
     else:
         return None
 
-    
+
 # -----------------------------------------------------------------------------
 def is_throw_away(line):
     """
@@ -225,7 +225,7 @@ def old_sort(projs):
     for prj in projs:
         dofile = dodo_filename(prj)
         if dofile:
-            pdict[prj] = os.path.getmtime(dofile)
+            pdict[prj] = osp.getmtime(dofile)
         else:
             pdict[prj] = 0
     rval = [_[0] for _ in sorted(pdict.items(), key=lambda k: k[1])]
