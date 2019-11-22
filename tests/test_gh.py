@@ -21,13 +21,13 @@ def test_code_quality():
 
 # -----------------------------------------------------------------------------
 @pytest.mark.parametrize("inp, exp", [
-    pytest.param("----------", True, id="throw away hyphen lines"),
-    pytest.param("", True, id="throw away empty lines"),
-    pytest.param("# this is a comment", True, id="throw away comment lines"),
-    pytest.param("-- DONE -----", True, id="-- DONE -----"),
-    pytest.param("- == DONE -----", True, id="- == DONE -----"),
-    pytest.param("=== DONE -----", True, id="=== DONE -----"),
-    pytest.param("everything else okay", False, id="everything else"),
+    pytest.param("----------", True, id="throw away: hyphen lines"),
+    pytest.param("", True, id="throw away: empty lines"),
+    pytest.param("# this is a comment", True, id="throw away: comment lines"),
+    pytest.param("-- DONE -----", True, id="throw away: -- DONE -----"),
+    pytest.param("- == DONE -----", True, id="throw away: - == DONE -----"),
+    pytest.param("=== DONE -----", True, id="throw away: === DONE -----"),
+    pytest.param("everything else okay", False, id="keep: everything else"),
 ])
 def test_is_throw_away(inp, exp):
     """
