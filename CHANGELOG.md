@@ -1,3 +1,11 @@
+## 1.0.1 ... 2019-11-22 14:49:28
+
+ * When displaying tasks, separate them with a blank line
+ * Match and display all four active task markers (-, ., >, ^)
+ * Add project marker for those with no DODO file
+ * Add test for deployability
+ * Complete test coverage
+
 ## 1.0.0 ... 2019-11-22 09:41:50
 
  * Project inception
