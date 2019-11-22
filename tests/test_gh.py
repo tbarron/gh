@@ -1,4 +1,5 @@
 from gh import __main__ as ghm
+from gh import version
 import os
 import pytest
 
@@ -108,6 +109,15 @@ def test_old_sort(prjdirs):
     pytest.dbgfunc()
     result = ghm.old_sort(prjdirs['input'])                           # payload
     assert result == prjdirs['osort']
+
+
+# -----------------------------------------------------------------------------
+def test_version():
+    """
+    Test for 'gh version'
+    """
+    result = ghm.gh_version_t()
+    assert result == "gh {}".format(version._v)
 
 
 # -----------------------------------------------------------------------------
