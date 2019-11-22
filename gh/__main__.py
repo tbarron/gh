@@ -56,13 +56,20 @@ def gh_projects_t(**kw):
 
 # -----------------------------------------------------------------------------
 @dispatch.on('tasks')
-def gh_tasks(**kw):
+def gh_tasks_d(**kw):
     """
     Show tasks for projects located in $GH_ROOT
     """
     if kw['d']:
         pdb.set_trace()
+    print(gh_tasks_t(**kw))
 
+
+# -----------------------------------------------------------------------------
+def gh_tasks_t(**kw):
+    """
+    """
+    rval = ""
     sort = kw['s']
     files = projects(os.getenv("GH_ROOT"), sort=sort)
     if kw['PROJECT']:
@@ -72,12 +79,17 @@ def gh_tasks(**kw):
     if kw['count']:
         for path in files:
             tl = get_tasks(path)
-            print("   {:45s}   {:>5d}".format(path, len(tl)))
+            # print("   {:45s}   {:>5d}".format(path, len(tl)))
+            rval += "   {:45s}   {:>5d}\n".format(path, len(tl))
             total += len(tl)
-        print("   {:45s}   {:>5d}".format("Total", total))
+        # print("   {:45s}   {:>5d}".format("Total", total))
+        rval += "   {:45s}   {:>5d}\n".format("Total", total)
     else:
         for path in files:
-            show_tasks(path)
+            rval += show_tasks(path)
+    return rval
+
+
 # -----------------------------------------------------------------------------
 @dispatch.on('version')
 def gh_version_d(**kw):
