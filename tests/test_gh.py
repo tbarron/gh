@@ -3,6 +3,7 @@ from gh import version
 import glob
 import os
 import pytest
+import re
 import tbx
 
 
@@ -35,6 +36,44 @@ def test_task_separation(tasks):
 
 
 # -----------------------------------------------------------------------------
+def test_task_count(tasks):
+    """
+    Given some tasks, report them and verify that they have whitespace between
+    them
+    """
+    pytest.dbgfunc()
+    tmpdir = tasks['tmpdir']
+    kw = {'PROJECT': 'myproj', 'count': True, 'd': False, 's': None,
+          'projects': False, 'tasks': True, 'version': False}
+    with tbx.envset(GH_ROOT=tmpdir.strpath):
+        result = ghm.gh_tasks_t(**kw)
+        rgx = r"\s+{}\s+4\n".format(tasks['prj'])
+        assert re.search(rgx, result)
+        assert re.search(r"\s+Total\s+4\n", result)
+
+
+# -----------------------------------------------------------------------------
+def test_task_proj(tasks):
+    """
+    Given some tasks, report them and verify that they have whitespace between
+    them
+    """
+    pytest.dbgfunc()
+    tmpdir = tasks['tmpdir']
+    kw = {'PROJECT': 'myproj', 'count': False, 'd': False, 's': None,
+          'projects': False, 'tasks': True, 'version': False}
+    with tbx.envset(GH_ROOT=tmpdir.strpath):
+        result = ghm.gh_tasks_t(**kw)
+        assert "\n\n - " in result
+
+    kw = {'PROJECT': 'nosuch', 'count': False, 'd': False, 's': None,
+          'projects': False, 'tasks': True, 'version': False}
+    with tbx.envset(GH_ROOT=tmpdir.strpath):
+        result = ghm.gh_tasks_t(**kw)
+        assert result == ""
+
+
+# -----------------------------------------------------------------------------
 def test_task_markers(tasks, capsys):
     """
     Use all potential task markers to identify tasks
@@ -43,6 +82,17 @@ def test_task_markers(tasks, capsys):
     path = tasks['prj'].strpath
     task_l = ghm.get_tasks(path)
     assert len(task_l) == 4
+
+
+# -----------------------------------------------------------------------------
+def test_get_tasks_empty(tasks_empty):
+    """
+    Make get_tasks() return an empty list because no tasks are present
+    """
+    pytest.dbgfunc()
+    path = tasks_empty['prj'].strpath
+    task_l = ghm.get_tasks(path)
+    assert task_l == []
 
 
 # -----------------------------------------------------------------------------
@@ -76,6 +126,24 @@ def test_projects_t(prjdirs):
     with tbx.envset(GH_ROOT=tmpdir.strpath):
         result = ghm.gh_projects_t(**kw)
         assert "nododo (no DODO)" in result
+        assert "tbx" in result
+        assert "tbx (no DODO)" not in result
+
+
+# -----------------------------------------------------------------------------
+def test_projects_count(prjdirs):
+    """
+    Test for ghm.gh_projects_t(), verifying that projects with no dodo file are
+    identified
+    """
+    pytest.dbgfunc()
+    tmpdir = prjdirs['root']
+    kw = {'PROJECT': None, 'count': True, 'd': False, 's': None,
+          'projects': True, 'tasks': False, 'version': False}
+    with tbx.envset(GH_ROOT=tmpdir.strpath):
+        result = ghm.gh_projects_t(**kw)
+        exp = "{} projects found\n".format(len(prjdirs['input']))
+        assert result == exp
 
 
 # -----------------------------------------------------------------------------
@@ -112,23 +180,39 @@ def test_dodo_filename_n(dodo_nosuch):
 
 
 # -----------------------------------------------------------------------------
-def test_alpha_sort(prjdirs):
+@pytest.mark.parametrize("stype, sname", [
+    pytest.param('alpha', 'asort'),
+    pytest.param('new', 'nsort'),
+    pytest.param('old', 'osort'),
+])
+def test_projects_sorts(prjdirs, stype, sname):
     """
-    A set of projects sorted alphabetically
+    Test an alpha sort through ghm.projects()
     """
     pytest.dbgfunc()
-    result = ghm.alpha_sort(prjdirs['input'])                         # payload
-    assert result == prjdirs['asort']
+    result = ghm.projects(prjdirs['root'], sort=stype)                # payload
+    for path in prjdirs[sname]:
+        dirstat = '(no DODO)' if 'nododo' in path.strpath else ''
+        try:
+            exp.append((path, dirstat))
+        except NameError:
+            exp = [(path, dirstat)]
+    assert result == exp
 
 
 # -----------------------------------------------------------------------------
-def test_new_sort(prjdirs):
+@pytest.mark.parametrize("func, sname", [
+    pytest.param(ghm.alpha_sort, 'asort', id='alpha'),
+    pytest.param(ghm.new_sort, 'nsort', id='new'),
+    pytest.param(ghm.old_sort, 'osort', id='old'),
+])
+def test_sorts(prjdirs, func, sname):
     """
-    A set of projects sorted new to old DODO file (no DODO file is oldest)
+    Test the sort routines
     """
     pytest.dbgfunc()
-    result = ghm.new_sort(prjdirs['input'])                           # payload
-    assert result == prjdirs['nsort']
+    result = func(prjdirs['input'])                                   # payload
+    assert result == prjdirs[sname]
 
 
 # -----------------------------------------------------------------------------
@@ -140,16 +224,6 @@ def test_no_sort(prjdirs):
     tup_l = ghm.projects(prjdirs['root'].strpath, False)              # payload
     result = [_[0] for _ in tup_l]
     assert set(result) == set([_.strpath for _ in prjdirs['input']])
-
-
-# -----------------------------------------------------------------------------
-def test_old_sort(prjdirs):
-    """
-    A set of projects sorted old to new DODO file (no DODO file is oldest)
-    """
-    pytest.dbgfunc()
-    result = ghm.old_sort(prjdirs['input'])                           # payload
-    assert result == prjdirs['osort']
 
 
 # -----------------------------------------------------------------------------
@@ -194,9 +268,14 @@ def tasks(tmpdir):
     task_l = [
         "",
         " ^ this is the first task (released)",
+        "   and it has a second line",
         " > this is the second task (committed)",
         " . this is the third task (changed, not yet committed)",
         " - this is the fourth task (not yet made)",
+        "   and this one has a second line also",
+        " + fifth task -- completed",
+        " < sixth task -- moved elsewhere",
+        " x seventh task -- abandoned",
         "",
     ]
     # project dir
@@ -213,6 +292,27 @@ def tasks(tmpdir):
         'tmpdir': tmpdir,
         'prj': prjdir,
         'dodo': dodo,
+    }
+    return data
+
+
+# -----------------------------------------------------------------------------
+@pytest.fixture
+def tasks_empty(tmpdir):
+    """
+    Set up a project with some tasks that we can test displaying
+    """
+    # project dir
+    prjdir = tmpdir.join("myproj")
+
+    # .project file
+    prjdir.join(".project").ensure()
+
+    # this project doesn't have a DODO file
+    data = {
+        'tmpdir': tmpdir,
+        'prj': prjdir,
+        'dodo': None,
     }
     return data
 
