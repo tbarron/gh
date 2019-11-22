@@ -47,8 +47,8 @@ def gh_projects_t(**kw):
     if kw['count']:
         rval += "{} projects found\n".format(len(files))
     else:
-        for item in files:
-            rval += "    {}\n".format(item)
+        for path, do_stat in files:
+            rval += "    {} {}\n".format(path, do_stat)
     return rval
 
 
@@ -71,7 +71,9 @@ def gh_tasks_t(**kw):
     sort = kw['s']
     files = projects(os.getenv("GH_ROOT"), sort=sort)
     if kw['PROJECT']:
-        files = [_ for _ in files if kw['PROJECT'] in _]
+        files = [_[0] for _ in files if kw['PROJECT'] in _[0]]
+    else:
+        files = [_[0] for _ in files]
 
     total = 0
     if kw['count']:
@@ -204,12 +206,16 @@ def omit_list():
 # -----------------------------------------------------------------------------
 def projects(root, sort=None):
     """
-    Return a list of project directories. To represent a project, the directory
-    must contain a marker file named '.project'.
+    Return a list of tuples representing project directories. The first element
+    of each tuple is the path of the directory. The second element is a string
+    that is either empty (if a DODO file exists) or '(no DODO)' (if no DODO
+    file is present).
 
-    walking everything: 6.468
+    To represent a project, the directory must contain a marker file named
+    '.project'.
     """
-    rval = []
+    plist = []
+    dolist = []
     omits = ['venv',
              '__pycache__',
              'test',
@@ -222,13 +228,26 @@ def projects(root, sort=None):
         rmables = [d for d in dirs if any(o in d for o in omits)]
         [dirs.remove(item) for item in rmables]
         if '.project' in files:
-            rval.append(path)
+            plist.append(path)
+            if any('DODO' in _[0] for _ in files):
+                dolist.append(path)
+
     if sort == 'alpha':
-        rval = alpha_sort(rval)
+        plist = alpha_sort(plist)
     elif sort == 'old':
-        rval = old_sort(rval)
+        plist = old_sort(plist)
     elif sort == 'new':
-        rval = new_sort(rval)
+        plist = new_sort(plist)
+    else:
+        plist = plist
+
+    rval = []
+    for path in plist:
+        if path in dolist:
+            rval.append((path, ''))
+        else:
+            rval.append((path, '(no DODO)'))
+
     return rval
 
 
