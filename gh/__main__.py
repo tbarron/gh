@@ -118,18 +118,37 @@ def get_tasks(path):
         return []
     with open(dofile) as rbl:
         for line in rbl:
-            if line.startswith(" + "):
-                throw_away = True
-            elif line.startswith(" - "):
-                task_l.append(task)
-                throw_away = False
-                task = line
+            pfl = []
+            if research(r"^\s[-.>^+<x]\s", line, pfl):
+                pfx = pfl[0]
+                if pfx in [" - ", " . ", " > ", " ^ "]:
+                    task_l.append(task)
+                    throw_away = False
+                    task = line
+                elif pfx in [" + ", " < ", " x "]:
+                    throw_away = True
             elif not is_throw_away(line) and not throw_away:
                 task += line
         task_l.append(task)
 
     task_l = [_ for _ in task_l if _]
     return task_l
+
+
+# -----------------------------------------------------------------------------
+def research(needle, haystack, result):
+    """
+    Look for rgx *needle* in str *haystack*. Put any match in result. If a
+    match was found, return True, else return False. Note that result must be a
+    list.
+    """
+    found = re.findall(needle, haystack)
+    if found:
+        result.append(found[0])
+        return True
+    else:
+        result.clear()
+        return False
 
 
 # -----------------------------------------------------------------------------
