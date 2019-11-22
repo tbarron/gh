@@ -20,6 +20,24 @@ def test_code_quality():
 
 
 # -----------------------------------------------------------------------------
+def test_task_separation(tasks, capsys):
+    """
+    Given some tasks, report them and verify that they have whitespace between
+    them
+    """
+    pytest.dbgfunc()
+    tmpdir = tasks['tmpdir']
+    kw = {'PROJECT': None, 'count': False, 'd': False, 's': None,
+          'projects': False, 'tasks': True, 'version': False}
+    with tbx.envset(GH_ROOT=tmpdir.strpath):
+        ghm.gh_tasks_d(**kw)
+        (out, err) = capsys.readouterr()
+        assert "\n\n - " in out
+        assert "Traceback" not in err
+        assert "Traceback" not in out
+
+
+# -----------------------------------------------------------------------------
 @pytest.mark.parametrize("inp, exp", [
     pytest.param("----------", True, id="throw away: hyphen lines"),
     pytest.param("", True, id="throw away: empty lines"),
@@ -133,6 +151,35 @@ def test_version():
     """
     result = ghm.gh_version_t()
     assert result == "gh {}".format(version._v)
+
+
+# -----------------------------------------------------------------------------
+@pytest.fixture
+def tasks(tmpdir):
+    """
+    Set up a project with some tasks that we can test displaying
+    """
+    task_l = [
+        "",
+        " - this is the first task",
+        " - this is the second task",
+        " - this is the third task",
+        ""
+    ]
+    # project dir
+    prjdir = tmpdir.join("myproj")
+
+    # .project file
+    prjdir.join(".project").ensure()
+
+    # DODO file with content
+    dodo = prjdir.join("DODO")
+    dodo.write("\n".join(task_l) + "\n")
+
+    data = {
+        'tmpdir': tmpdir,
+    }
+    return data
 
 
 # -----------------------------------------------------------------------------
