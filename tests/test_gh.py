@@ -130,6 +130,7 @@ def prjdirs(tmpdir):
         'apple': {'dtime': 1500},
         'zagnut': {'dtime': 1400},
         'frump': {'dtime': 1300},
+        'nododo': {'dtime': -1},
         'gh': {'dtime': 1200},
         'tbx': {'dtime': 1000},
     }
@@ -138,10 +139,11 @@ def prjdirs(tmpdir):
         pd.ensure(dir=True)
         dot = pd.join('.project')
         dot.ensure()
-        dodo = pd.join('DODO')
-        dodo.ensure()
-        os.utime(dodo.strpath, (dodo.atime(),
-                                dodo.mtime() - pdata[prj]['dtime']))
+        if prj != 'nododo':
+            dodo = pd.join('DODO')
+            dodo.ensure()
+            os.utime(dodo.strpath, (dodo.atime(),
+                                    dodo.mtime() - pdata[prj]['dtime']))
         pdata[prj]['dir'] = pd
         pdata[prj]['dot'] = dot
         pdata[prj]['dodo'] = dodo
