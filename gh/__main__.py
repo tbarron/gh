@@ -28,7 +28,7 @@ import re
 
 # -----------------------------------------------------------------------------
 @dispatch.on('projects')
-def gh_projects_d(**kw):
+def gh_projects_d(**kw):                                     # pragma: no cover
     """
     List projects in $GH_ROOT
     """
@@ -54,7 +54,7 @@ def gh_projects_t(**kw):
 
 # -----------------------------------------------------------------------------
 @dispatch.on('tasks')
-def gh_tasks_d(**kw):
+def gh_tasks_d(**kw):                                        # pragma: no cover
     """
     Show tasks for projects located in $GH_ROOT
     """
@@ -90,7 +90,7 @@ def gh_tasks_t(**kw):
 
 # -----------------------------------------------------------------------------
 @dispatch.on('version')
-def gh_version_d(**kw):
+def gh_version_d(**kw):                                      # pragma: no cover
     """
     Report the current version
     """
