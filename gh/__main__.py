@@ -129,12 +129,16 @@ def show_tasks(path):
     """
     Show the tasks in dodo file *path*
     """
+    rval = ""
     task_l = get_tasks(path)
     if task_l:
-        print("----------- {} ------------\n".format(path))
+        # print("----------- {} ------------\n".format(path))
+        rval += "----------- {} ------------\n".format(path)
         for task in task_l:
-            print(task)
-        
+            # print(task)
+            rval += task
+    return rval
+
 
 # -----------------------------------------------------------------------------
 def dodo_filename(path):
