@@ -1,3 +1,7 @@
+## 1.0.2 ... 2019-11-27 06:23:47
+
+ * Applying the unlicense
+
 ## 1.0.1 ... 2019-11-22 14:49:28
 
  * When displaying tasks, separate them with a blank line

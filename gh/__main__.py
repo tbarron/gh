@@ -16,6 +16,9 @@ gh projects [-d] [-v] [-s SORT]
     sort from oldest to newest. The project 'age' is based on the mod time of
     the project's DODO file (or 0 if the project has no DODO file). Thus, the
     'old' sort will put projects with no DODO file at the top of the list.
+
+This is free and unencumbered software released into the public domain.
+For more details, please visit <http://unlicense.org/>.
 """
 from docopt_dispatch import dispatch
 from gh import version
@@ -24,6 +27,14 @@ import os
 import os.path as osp
 import pdb
 import re
+
+
+# -----------------------------------------------------------------------------
+def main():
+    """
+    Main entry point
+    """
+    dispatch(__doc__)
 
 
 # -----------------------------------------------------------------------------
@@ -224,7 +235,7 @@ def projects(root, sort=None):
              '.git',
              '.cache',
              ]
-    for (path, dirs, files) in os.walk(root):
+    for (path, dirs, files) in os.walk(root, followlinks=True):
         rmables = [d for d in dirs if any(o in d for o in omits)]
         [dirs.remove(item) for item in rmables]
         if '.project' in files:

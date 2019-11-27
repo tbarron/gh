@@ -23,3 +23,7 @@
       * gh version [-d]
 
          * Report the current version of gh.
+
+  * This is free and unencumbered software released into the public domain.
+    For more details, please visit <http://unlicense.org/>.
+
